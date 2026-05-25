@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grist Widget Bridge</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 340px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #fff;
+    }
+
+    .container { padding: 18px; }
+
+    /* Header */
+    .header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+    }
+    .logo {
+      width: 40px; height: 40px;
+      background: #16b378;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 18px;
+    }
+    .title    { font-size: 16px; font-weight: 600; }
+    .subtitle { font-size: 11px; color: #94a3b8; }
+
+    /* Status card */
+    .status-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .status-header {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+    }
+    .status-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .status-dot.grist    { background: #16b378; box-shadow: 0 0 8px #16b378; }
+    .status-dot.widget   { background: #f97316; box-shadow: 0 0 8px #f97316; }
+    .status-dot.inactive { background: #6b7280; }
+    .status-text { font-size: 13px; font-weight: 500; }
+    .tab-url {
+      font-size: 11px;
+      color: #94a3b8;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      word-break: break-all;
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+
+    /* Section title */
+    .section-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #94a3b8;
+      margin: 14px 0 8px;
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 10px 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px;
+    }
+    .btn + .btn { margin-top: 8px; }
+    .btn-primary    { background: #16b378; color: #fff; }
+    .btn-primary:hover { background: #0f8a5b; }
+    .btn-warm       { background: #f97316; color: #fff; }
+    .btn-warm:hover { background: #ea580c; }
+    .btn-secondary  { background: rgba(255,255,255,.08); color: #fff; }
+    .btn-secondary:hover { background: rgba(255,255,255,.14); }
+    .btn-ghost      { background: transparent; color: #94a3b8; font-weight: 500; font-size: 12px; padding: 8px; }
+    .btn-ghost:hover { color: #fff; }
+    .btn:disabled   { opacity: .45; cursor: not-allowed; }
+
+    /* List of registered URLs */
+    .url-list { display: flex; flex-direction: column; gap: 6px; }
+    .url-item {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+    }
+    .url-item.grist  { border-color: rgba(22,179,120,.35); }
+    .url-item.widget { border-color: rgba(249,115,22,.35); }
+    .url-item.api    { border-color: rgba(139,92,246,.35); }
+    .url-item .badge {
+      flex-shrink: 0;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .url-item.grist  .badge { background: rgba(22,179,120,.2);  color: #4ade80; }
+    .url-item.widget .badge { background: rgba(249,115,22,.2);  color: #fb923c; }
+    .url-item.api    .badge { background: rgba(139,92,246,.2);  color: #a78bfa; }
+    .url-item .url   { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #e2e8f0; }
+    .url-item button {
+      background: none; border: none; cursor: pointer;
+      color: #64748b; font-size: 14px; padding: 0 2px;
+    }
+    .url-item button:hover { color: #ef4444; }
+    .empty-list {
+      font-size: 11px; color: #94a3b8; font-style: italic;
+      padding: 8px; text-align: center;
+    }
+
+    /* Hint when current tab is not http(s) */
+    .hint-box {
+      background: rgba(255,255,255,.04);
+      border: 1px dashed rgba(255,255,255,.15);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 11px;
+      line-height: 1.5;
+      color: #94a3b8;
+    }
+
+    /* Notice */
+    .notice {
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
+    .notice.show    { display: block; }
+    .notice.ok      { background: rgba(34,197,94,.15);  border: 1px solid rgba(34,197,94,.3);  color: #4ade80; }
+    .notice.err     { background: rgba(239,68,68,.15);  border: 1px solid rgba(239,68,68,.3);  color: #fca5a5; }
+
+    /* Footer */
+    .footer {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      display: flex; gap: 8px;
+    }
+    .version {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 10px;
+      color: #64748b;
+      letter-spacing: .04em;
+    }
+    .version a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .version a:hover { color: #94a3b8; }
+
+    .manual-row {
+      display: flex; gap: 8px; align-items: center;
+      margin-top: 8px;
+    }
+    .manual-row input {
+      flex: 1;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      color: #e2e8f0;
+      outline: none;
+    }
+    .manual-row input::placeholder { color: #475569; }
+    .manual-row input:focus { border-color: rgba(249,115,22,.5); }
+    .manual-row .btn-add { width: auto; padding: 8px 14px; font-size: 15px;
+      color: #fff; border: none; border-radius: 8px;
+      cursor: pointer; font-weight: 700; flex-shrink: 0;
+    }
+    .manual-row .btn-add.widget { background: #f97316; }
+    .manual-row .btn-add.widget:hover { background: #ea580c; }
+    .manual-row .btn-add.grist  { background: #16b378; }
+    .manual-row .btn-add.grist:hover  { background: #0f8a5b; }
+    .manual-row .btn-add.api    { background: #8b5cf6; }
+    .manual-row .btn-add.api:hover    { background: #7c3aed; }
+
+    /* Status dot in URL list */
+    .url-dot {
+      flex-shrink: 0;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .url-dot.ok    { background: #4ade80; box-shadow: 0 0 4px rgba(74,222,128,.6); }
+    .url-dot.warn  { background: #facc15; box-shadow: 0 0 4px rgba(250,204,21,.6); }
+
+    .field-hint {
+      margin-top: 6px;
+      font-size: 10px;
+      line-height: 1.4;
+      color: #64748b;
+    }
+
+    .builder-hint {
+      background: rgba(251, 191, 36, .08);
+      border: 1px solid rgba(251, 191, 36, .3);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 11px;
+      line-height: 1.45;
+      color: #fbbf24;
+      margin-bottom: 12px;
+    }
+    .builder-hint b { color: #fcd34d; }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">G</div>
+      <div>
+        <div class="title">Grist Widget Bridge</div>
+        <div class="subtitle">Débloque CORS &amp; localStorage</div>
+      </div>
+    </div>
+
+    <!-- Status of current tab -->
+    <div class="status-card">
+      <div class="status-header">
+        <div class="status-dot inactive" id="statusDot"></div>
+        <span class="status-text" id="statusText">Vérification…</span>
+      </div>
+      <div class="tab-url" id="tabUrl">—</div>
+    </div>
+
+    <!-- Quick add buttons (shown only if current tab matches no rule) -->
+    <div id="addSection" class="hidden">
+      <div class="section-title">Ajouter cet onglet</div>
+      <button class="btn btn-primary" id="addAsGristBtn">
+        <span>+ Comme instance Grist</span>
+      </button>
+      <button class="btn btn-warm" id="addAsWidgetBtn">
+        <span>+ Comme widget</span>
+      </button>
+    </div>
+
+    <!-- Remove button (shown when current tab is registered) -->
+    <div id="removeSection" class="hidden">
+      <button class="btn btn-secondary" id="removeBtn">
+        <span>− Retirer cet onglet de la config</span>
+      </button>
+    </div>
+
+    <!-- Builder detection (gristlabs.github.io) -->
+    <div id="builderHint" class="hidden builder-hint">
+      ⚠ Builder <b>Grist Labs</b> détecté — l'ajouter couvrira <b>tous</b> les widgets servis depuis ce domaine, pas seulement celui-ci.
+    </div>
+
+    <!-- Hint when current tab isn't a normal http(s) page -->
+    <div id="hintSection" class="hidden hint-box">
+      Ouvrez un onglet sur votre page Grist ou sur votre widget pour pouvoir l'ajouter ici en un clic.
+      Vous pouvez aussi utiliser ⚙ Options pour saisir une URL manuellement.
+    </div>
+
+    <!-- Notice -->
+    <div class="notice" id="notice"></div>
+
+    <!-- Manual Grist URL input -->
+    <div id="gristManualSection">
+      <div class="section-title">Ajouter une instance Grist</div>
+      <div class="manual-row">
+        <input type="text" id="manualGristUrl" placeholder="https://grist.exemple.fr" autocomplete="off" spellcheck="false">
+        <button class="btn-add grist" id="manualGristAddBtn">+</button>
+      </div>
+      <div class="field-hint">
+        L'API Grist Cloud publique est <code>https://api.getgrist.com</code> (différente de <code>docs.getgrist.com</code>).
+      </div>
+    </div>
+
+    <!-- Manual widget URL input -->
+    <div id="widgetManualSection">
+      <div class="section-title">Ajouter un widget</div>
+      <div class="manual-row">
+        <input type="text" id="manualWidgetUrl" placeholder="https://mon-widget.fr/*" autocomplete="off" spellcheck="false">
+        <button class="btn-add widget" id="manualWidgetAddBtn">+</button>
+      </div>
+      <div class="field-hint">
+        Pour un widget servi par un builder (<code>gristlabs.github.io</code>, glitch.me…), saisissez l'origine du builder, pas l'URL du widget.
+      </div>
+    </div>
+
+    <!-- Manual external API URL input -->
+    <div id="apiManualSection">
+      <div class="section-title">Ajouter une API externe (CORS)</div>
+      <div class="manual-row">
+        <input type="text" id="manualApiUrl" placeholder="https://api.cloudinary.com/*" autocomplete="off" spellcheck="false" style="border-color:rgba(139,92,246,.3)">
+        <button class="btn-add api" id="manualApiAddBtn">+</button>
+      </div>
+      <div class="field-hint">
+        Ajoute un header <code>Access-Control-Allow-Origin: *</code> sur les réponses de cette API (ex&nbsp;: Cloudinary, S3, Supabase…).
+      </div>
+    </div>
+
+    <!-- Registered URLs list -->
+    <div class="section-title">Adresses configurées</div>
+    <div class="url-list" id="urlList"></div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <button class="btn btn-ghost" id="reloadBtn" title="Recharger l'onglet pour appliquer">
+        ↻ Recharger l'onglet
+      </button>
+      <button class="btn btn-ghost" id="optionsBtn" title="Configuration avancée">
+        ⚙ Options
+      </button>
+    </div>
+    <div class="version" id="version">v—</div>
+
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

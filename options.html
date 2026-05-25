@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Grist Widget Bridge — Configuration avancée</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font: 14px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #e2e8f0;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      padding: 32px;
+      min-height: 100vh;
+    }
+    .card {
+      background: rgba(255,255,255,.04);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      padding: 28px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .logo {
+      width: 40px; height: 40px;
+      background: #16b378;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 700; font-size: 18px;
+    }
+    .title    { font-size: 16px; font-weight: 600; color: #fff; }
+    .subtitle { font-size: 12px; color: #94a3b8; }
+
+    h2 { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+    p  { font-size: 12px; color: #94a3b8; margin-bottom: 14px; line-height: 1.5; }
+
+    .section-title {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: .08em; color: #94a3b8; margin: 24px 0 10px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      color: #fff;
+      background: rgba(0,0,0,.25);
+      transition: border-color .15s;
+    }
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #16b378;
+      background: rgba(0,0,0,.4);
+    }
+    input[type="text"].error { border-color: #ef4444; }
+
+    .url-list { display: flex; flex-direction: column; gap: 6px; }
+    .url-item {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      color: #e2e8f0;
+    }
+    .url-item.grist  { border-color: rgba(22,179,120,.4); }
+    .url-item.widget { border-color: rgba(249,115,22,.4); }
+    .url-item .url { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .url-item button {
+      background: none; border: none; cursor: pointer;
+      color: #64748b; font-size: 16px; padding: 0 2px;
+    }
+    .url-item button:hover { color: #ef4444; }
+    .empty {
+      font-size: 12px; color: #94a3b8; font-style: italic;
+      padding: 10px; text-align: center;
+      background: rgba(255,255,255,.03);
+      border: 1px dashed rgba(255,255,255,.08);
+      border-radius: 8px;
+    }
+
+    .add-row { display: flex; gap: 8px; margin-top: 10px; }
+    .add-row input { flex: 1; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 16px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      border: 1px solid transparent; transition: background .15s;
+    }
+    .btn-primary    { background: #16b378; color: #fff; }
+    .btn-primary:hover { background: #0f8a5b; }
+    .btn-warm       { background: #f97316; color: #fff; }
+    .btn-warm:hover { background: #ea580c; }
+    .btn-secondary  { background: rgba(255,255,255,.06); color: #fff; border-color: rgba(255,255,255,.12); }
+    .btn-secondary:hover { background: rgba(255,255,255,.12); }
+    .btn-danger     { background: rgba(239,68,68,.12); color: #fca5a5; border-color: rgba(239,68,68,.25); }
+    .btn-danger:hover { background: rgba(239,68,68,.18); }
+
+    .actions { display: flex; gap: 10px; margin-top: 24px; align-items: center; flex-wrap: wrap; }
+
+    .notice {
+      margin-top: 16px; padding: 10px 14px;
+      border-radius: 8px; font-size: 12px;
+      display: none;
+    }
+    .notice.ok  { background: rgba(34,197,94,.12); color: #4ade80; border: 1px solid rgba(34,197,94,.3); }
+    .notice.err { background: rgba(239,68,68,.12); color: #fca5a5; border: 1px solid rgba(239,68,68,.3); }
+    .notice.show { display: block; }
+
+    hr { border: none; border-top: 1px solid rgba(255,255,255,.08); margin: 28px 0; }
+
+    .info-box {
+      margin-top: 20px;
+      padding: 12px 14px;
+      background: rgba(22,179,120,.08);
+      border: 1px solid rgba(22,179,120,.2);
+      border-radius: 8px;
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    .info-box strong { color: #4ade80; }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="logo">G</div>
+    <div>
+      <div class="title">Grist Widget Bridge</div>
+      <div class="subtitle">Configuration avancée</div>
+    </div>
+  </div>
+
+  <p>
+    Cette extension fonctionne avec <strong>n'importe quelle instance Grist</strong>
+    et <strong>n'importe quel hébergeur de widget</strong>. Configurez ici les
+    adresses concernées — l'extension n'agit que sur ces URLs.
+  </p>
+
+  <!-- Instances Grist -->
+  <div class="section-title">🟢 Instances Grist</div>
+  <p>Les serveurs Grist où les widgets sont chargés. L'extension y débloque le CORS de l'API.</p>
+
+  <div id="grist-list" class="url-list"></div>
+
+  <div class="add-row">
+    <input type="text" id="new-grist"
+      placeholder="https://votre-grist.exemple.fr"
+      autocomplete="off" spellcheck="false">
+    <button class="btn btn-primary" id="add-grist" type="button">+ Ajouter</button>
+  </div>
+
+  <hr>
+
+  <!-- Widgets -->
+  <div class="section-title">🟠 Widgets autorisés</div>
+  <p>Les domaines des widgets personnalisés (ex: La Forge). L'extension y corrige <code>localStorage</code> et autorise le pont d'upload vers Grist.</p>
+
+  <div id="widget-list" class="url-list"></div>
+
+  <div class="add-row">
+    <input type="text" id="new-widget"
+      placeholder="https://mon-widget.exemple.fr/"
+      autocomplete="off" spellcheck="false">
+    <button class="btn btn-warm" id="add-widget" type="button">+ Ajouter</button>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-secondary" id="btn-reset" type="button">↺ Réinitialiser</button>
+  </div>
+
+  <div class="notice" id="notice"></div>
+
+  <div class="info-box">
+    <strong>Astuce :</strong> vous pouvez ajouter des adresses plus rapidement
+    via l'icône de l'extension dans la barre d'outils — un clic « + Comme instance Grist »
+    ou « + Comme widget » suffit.
+  </div>
+
+</div>
+
+<script src="options.js"></script>
+</body>
+</html>
