@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grist Widget Bridge</title>
+<meta name="description" content="Extension de navigateur qui débloque les widgets Grist personnalisés : envoi de pièces jointes, accès à l'API, stockage local.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="entete">
+  <div class="cadre">
+    <a class="marque" href="./"><img src="icon128.png" alt="" width="40" height="40"> Grist Widget Bridge</a>
+    <nav><a href="./" aria-current="page">Accueil</a><a href="support.html">Assistance</a><a href="confidentialite.html">Confidentialité</a></nav>
+  </div>
+</header>
+
+<main class="cadre">
+  <section class="intro">
+    <h1>Faire fonctionner les widgets Grist hébergés sur un autre site</h1>
+    <p class="chapo">Les widgets personnalisés de <a href="https://www.getgrist.com/">Grist</a> sont souvent servis depuis un autre site que l'instance Grist elle-même. Le navigateur leur applique alors des protections qui bloquent certaines fonctions. Grist Widget Bridge les rétablit, sans rien changer à la sécurité de Grist.</p>
+  </section>
+
+  <section>
+    <h2>Ce que l'extension corrige</h2>
+    <div class="grille">
+      <article class="carte">
+        <h3>Envoi de pièces jointes</h3>
+        <p>Quand l'instance Grist est placée derrière un portail d'authentification, un widget ne peut pas y envoyer de fichier : sa requête part sans la session de l'utilisateur et le portail la refuse. L'extension confie le fichier à la page Grist ouverte, qui l'envoie avec la session de l'utilisateur.</p>
+      </article>
+      <article class="carte">
+        <h3>Accès à l'API Grist</h3>
+        <p>Ajoute les en-têtes CORS nécessaires sur l'API des instances Grist que vous avez déclarées, et uniquement sur celles-ci.</p>
+      </article>
+      <article class="carte">
+        <h3>Stockage local</h3>
+        <p>Quand le navigateur interdit <code>localStorage</code> à un widget, l'extension lui en fournit un équivalent, conservé sur votre poste.</p>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Installation et réglage</h2>
+    <ol class="etapes">
+      <li>Installez l'extension depuis le Chrome Web Store.</li>
+      <li>Sur une page de votre instance Grist, ouvrez l'extension et cliquez sur <strong>« + Comme instance Grist »</strong>.</li>
+      <li>Sur la page de votre widget, cliquez sur <strong>« + Comme widget »</strong>.</li>
+      <li>Rechargez l'onglet Grist.</li>
+    </ol>
+    <p class="note">La version « Métropole de Lyon » est préconfigurée pour <code>grist.grandlyon.fr</code> et l'hébergeur des widgets de la Métropole : il n'y a rien à régler.</p>
+  </section>
+
+  <section>
+    <h2>Ce que l'extension ne fait pas</h2>
+    <ul class="liste">
+      <li>Elle ne collecte, ne transmet et ne vend aucune donnée. Elle ne contacte aucun serveur de son éditeur.</li>
+      <li>Elle n'agit que sur les adresses que vous avez déclarées (ou que la version préconfigurée déclare).</li>
+      <li>Elle ne contourne pas les droits de Grist : un fichier n'est accepté que si votre compte a le droit d'écrire dans le document.</li>
+    </ul>
+    <p>Le détail figure dans la <a href="confidentialite.html">politique de confidentialité</a>.</p>
+  </section>
+
+  <section>
+    <h2>Code source</h2>
+    <p>L'extension est libre (licence MIT). Son code est consultable sur <a href="https://github.com/isaytoo/grist-widget-bridge-firefox">GitHub</a>.</p>
+  </section>
+</main>
+
+<footer class="pied">
+  <div class="cadre">© 2025-2026 Saïd Hamadou (isaytoo) · <a href="support.html">Assistance</a> · <a href="confidentialite.html">Confidentialité</a></div>
+</footer>
+</body>
+</html>

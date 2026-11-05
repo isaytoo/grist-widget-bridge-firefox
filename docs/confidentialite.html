@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Politique de confidentialité — Grist Widget Bridge</title>
+<meta name="description" content="Politique de confidentialité de l'extension Grist Widget Bridge : aucune donnée collectée.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="entete">
+  <div class="cadre">
+    <a class="marque" href="./"><img src="icon128.png" alt="" width="40" height="40"> Grist Widget Bridge</a>
+    <nav><a href="./">Accueil</a><a href="support.html">Assistance</a><a href="confidentialite.html" aria-current="page">Confidentialité</a></nav>
+  </div>
+</header>
+
+<main class="cadre texte">
+  <h1>Politique de confidentialité</h1>
+  <p class="doux">Dernière mise à jour : 5 novembre 2026 · <a href="#english">English version below</a></p>
+
+  <div class="resume">
+    <strong>En bref :</strong> Grist Widget Bridge ne collecte aucune donnée personnelle, n'envoie rien à son éditeur ni à un tiers, et ne contient aucun outil de mesure d'audience.
+  </div>
+
+  <h2>1. Éditeur</h2>
+  <p>L'extension est éditée par Saïd Hamadou (isaytoo). Contact : <a href="https://github.com/isaytoo/grist-widget-bridge-firefox/issues">tickets GitHub du projet</a>.</p>
+
+  <h2>2. Données collectées</h2>
+  <p><strong>Aucune.</strong> L'extension ne possède pas de serveur. Elle n'envoie aucune information à son éditeur, ne contient aucun traceur ni outil d'analyse, et ne dépose aucun cookie.</p>
+
+  <h2>3. Données conservées sur votre appareil</h2>
+  <ul class="liste">
+    <li><strong>Réglages</strong> (<code>chrome.storage.sync</code>) : la liste des adresses que vous avez déclarées — instances Grist, hébergeurs de widgets, API externes. Si la synchronisation de Chrome est activée, Chrome la synchronise entre vos appareils via votre compte Google ; l'éditeur de l'extension n'y a pas accès.</li>
+    <li><strong>Stockage de secours des widgets</strong> (<code>chrome.storage.local</code>) : quand le navigateur interdit <code>localStorage</code> à un widget déclaré, les valeurs que ce widget y aurait écrites sont conservées ici, sur votre poste uniquement.</li>
+  </ul>
+  <p>Désinstaller l'extension efface ces données.</p>
+
+  <h2>4. Fichiers envoyés par un widget</h2>
+  <p>Quand vous joignez un fichier dans un widget déclaré, l'extension le transmet, à l'intérieur de votre navigateur, à la page Grist ouverte dans le même onglet. Cette page l'envoie à <strong>cette même instance Grist</strong>, avec votre session, comme si vous l'aviez déposé vous-même dans Grist. Le fichier n'est transmis à aucun autre destinataire, et l'extension n'en garde aucune copie.</p>
+
+  <h2>5. Pourquoi l'extension demande ces autorisations</h2>
+  <table class="tableau">
+    <thead><tr><th>Autorisation</th><th>Usage</th></tr></thead>
+    <tbody>
+      <tr><td>Accès aux sites</td><td>Les adresses des instances Grist et des widgets sont choisies par l'utilisateur et ne peuvent pas être connues à l'avance. L'extension n'agit que sur les adresses déclarées.</td></tr>
+      <tr><td><code>declarativeNetRequest</code></td><td>Ajouter les en-têtes nécessaires (CORS, <code>Origin-Agent-Cluster</code>) aux réponses des seules adresses déclarées. Le contenu des pages et des requêtes n'est ni lu ni modifié.</td></tr>
+      <tr><td><code>scripting</code></td><td>Installer le relais de pièces jointes sur les pages des instances Grist déclarées, et le stockage de secours dans les widgets déclarés.</td></tr>
+      <tr><td><code>tabs</code>, <code>activeTab</code></td><td>Lire l'adresse de l'onglet actif quand vous ouvrez l'extension, pour proposer « + Comme instance Grist » ou « + Comme widget », et recharger cet onglet à votre demande.</td></tr>
+      <tr><td><code>storage</code></td><td>Conserver les réglages et le stockage de secours décrits au point 3.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>6. Partage et vente</h2>
+  <p>Aucune donnée n'est vendue, louée ni transmise à des tiers. L'utilisation des informations reçues des API de Chrome respecte le <a href="https://developer.chrome.com/docs/webstore/program-policies/policies">règlement du Chrome Web Store relatif aux données des utilisateurs</a>, y compris les exigences d'utilisation limitée.</p>
+
+  <h2>7. Modifications</h2>
+  <p>Toute modification de cette politique est publiée sur cette page, avec sa date.</p>
+
+  <hr>
+
+  <h2 id="english">Privacy policy (English)</h2>
+  <p class="doux">Last updated: November 5, 2026</p>
+  <p><strong>Grist Widget Bridge collects no personal data.</strong> It has no server, sends nothing to its publisher or to any third party, contains no analytics or tracking, and sets no cookies.</p>
+  <p><strong>Stored on your device only:</strong> your settings (the Grist instances, widget hosts and external APIs you declared) in <code>chrome.storage.sync</code>, which Chrome may sync across your devices through your Google account if Chrome sync is enabled; and, when the browser blocks <code>localStorage</code> for a declared widget, that widget's values in <code>chrome.storage.local</code>. Uninstalling the extension removes them.</p>
+  <p><strong>Files:</strong> when you attach a file in a declared widget, the extension hands it, inside your browser, to the Grist page open in the same tab, which uploads it to that same Grist instance with your own session. It is sent nowhere else and no copy is kept.</p>
+  <p><strong>Permissions</strong> are used only on the addresses you declared: adding CORS / <code>Origin-Agent-Cluster</code> response headers, installing the upload relay and the storage fallback, and reading the active tab's address when you open the extension popup.</p>
+  <p>No data is sold or transferred. The use of information received from Chrome APIs adheres to the Chrome Web Store User Data Policy, including the Limited Use requirements. Contact: <a href="https://github.com/isaytoo/grist-widget-bridge-firefox/issues">GitHub issues</a>.</p>
+</main>
+
+<footer class="pied">
+  <div class="cadre">© 2025-2026 Saïd Hamadou (isaytoo) · <a href="./">Accueil</a> · <a href="support.html">Assistance</a></div>
+</footer>
+</body>
+</html>
