@@ -56,7 +56,7 @@
 
   // ── Résolution du endpoint Grist ────────────────────────────────────
   // L'ancienne version n'acceptait que les adresses en /doc/<id> et échouait sur les instances
-  // à équipe dans le chemin, comme grist.grandlyon.fr/o/docs/uY4gHTxzC6SJ/… : « Impossible de
+  // à équipe dans le chemin, comme grist.exemple.fr/o/docs/uY4gHTxzC6SJ/… : « Impossible de
   // déterminer le docId ». NB : window.gristConfig n'est pas lisible d'ici (content script en
   // monde ISOLATED), d'où l'analyse de l'adresse.
   //

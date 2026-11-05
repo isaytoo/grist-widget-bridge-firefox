@@ -28,23 +28,29 @@ Déploiement sur un parc : publier l'extension (modules complémentaires de Fire
 Le relais de pièces jointes n'accepte que les widgets déclarés, et seulement depuis une
 iframe de la page Grist.
 
-## Configuration intégrée (2.6)
+## Préconfiguration (2.6)
 
-Cette version est préconfigurée pour l'organisation : à l'installation, et à chaque mise
-à jour, elle déclare d'elle-même
+`PRECONFIG`, en tête de `background.js`, permet de déclarer d'office une instance Grist et un
+hébergeur de widgets : les postes n'ont alors rien à régler. Les deux listes sont **vides**
+dans cette version — l'extension n'agit que sur les adresses ajoutées par l'utilisateur.
 
-- l'instance Grist `https://grist.grandlyon.fr`
-- l'hébergeur des widgets `https://grist-custom-widgets-grandlyon-60b9d7.forge-pages.grandlyon.com/*`
+Pour un déploiement en organisation :
 
-Rien à configurer sur les postes. Les entrées ajoutées à la main restent possibles et sont
-conservées. Pour une autre instance ou un autre hébergeur, modifier `PRECONFIG` en tête de
-`background.js`.
+```js
+const PRECONFIG = {
+  gristUrls:  ['https://grist.exemple.fr'],
+  widgetUrls: ['https://widgets.exemple.fr/*'],
+};
+```
+
+Ces entrées sont (r)ajoutées à l'installation et à chaque mise à jour ; celles ajoutées à la
+main sont conservées à côté. Reconstruire le paquet après modification.
 
 ## Nouveautés 2.5
 
 - Relais de pièces jointes : le document est trouvé quel que soit le format de l'adresse
   (`/doc/<id>`, `/<id>/<titre>`, `/o/<équipe>/<id>/…`), et l'identifiant transmis par le
-  widget est utilisé en priorité. La 2.4 échouait sur `grist.grandlyon.fr/o/docs/…`.
+  widget est utilisé en priorité. La 2.4 échouait sur les adresses en `/o/<équipe>/docs/…`.
 - Version Chrome (service worker Manifest V3).
 
 ## Protocole du relais (pour les widgets)

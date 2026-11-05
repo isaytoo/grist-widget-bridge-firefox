@@ -13,12 +13,16 @@
  *   }
  */
 
-// Configuration intégrée : rien à déclarer sur les postes.
-// Ces entrées sont (r)ajoutées à chaque installation et mise à jour de l'extension ; les
-// réglages ajoutés à la main par l'utilisateur sont conservés à côté.
+// Préconfiguration facultative : adresses déclarées d'office à chaque installation et mise
+// à jour de l'extension, en plus de celles que l'utilisateur ajoute lui-même (qui sont
+// conservées à côté).
+//
+// Les deux listes sont vides ici : l'extension n'agit sur rien tant que rien n'est déclaré.
+// Pour un déploiement en organisation, renseigner son instance et son hébergeur de widgets,
+// puis reconstruire le paquet — voir « Préconfiguration » dans le README.
 const PRECONFIG = {
-  gristUrls:  ['https://grist.grandlyon.fr'],
-  widgetUrls: ['https://grist-custom-widgets-grandlyon-60b9d7.forge-pages.grandlyon.com/*'],
+  gristUrls:  [],   // ex. ['https://grist.exemple.fr']
+  widgetUrls: [],   // ex. ['https://widgets.exemple.fr/*']
 };
 
 const DEFAULTS = {

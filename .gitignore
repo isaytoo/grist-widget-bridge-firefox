@@ -1,0 +1,6 @@
+# Paquet produit pour le magasin, reconstruit à la demande
+*.zip
+.DS_Store
+
+# Préconfiguration interne : adresses de l'organisation, jamais publiées
+*.local.sh
