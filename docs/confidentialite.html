@@ -1,23 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Politique de confidentialité — Grist Widget Bridge</title>
-<meta name="description" content="Politique de confidentialité de l'extension Grist Widget Bridge : aucune donnée collectée.">
+<meta name="description" content="Grist Widget Bridge ne collecte aucune donnée : pas de serveur, pas de traceur, rien n'est transmis à son éditeur.">
+<link rel="icon" href="img/icon128.png">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="entete">
-  <div class="cadre">
-    <a class="marque" href="./"><img src="icon128.png" alt="" width="40" height="40"> Grist Widget Bridge</a>
-    <nav><a href="./">Accueil</a><a href="support.html">Assistance</a><a href="confidentialite.html" aria-current="page">Confidentialité</a></nav>
-  </div>
-</header>
+<div class="enveloppe">
 
-<main class="cadre texte">
-  <h1>Politique de confidentialité</h1>
-  <p class="doux">Dernière mise à jour : 5 novembre 2026 · <a href="#english">English version below</a></p>
+  <nav class="barre">
+    <div class="barre-inner">
+      <a class="marque" href="index.html"><img src="img/icon128.png" alt=""> Grist Widget Bridge</a>
+      <div class="nav">
+        <a href="index.html">Accueil</a>
+        <a href="support.html">Assistance</a>
+        <a href="confidentialite.html" aria-current="page">Confidentialité</a>
+        <a href="https://github.com/isaytoo/grist-widget-bridge-firefox">Code source</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero" style="padding-bottom:0">
+      <span class="pastille">● Mise à jour le 5 novembre 2026</span>
+      <h1>Politique de <span class="accent">confidentialité</span></h1>
+      <div class="encadre">
+        <p><strong>En bref :</strong> l'extension ne collecte aucune donnée personnelle, n'envoie rien à son éditeur ni à un tiers, et ne contient aucun outil de mesure d'audience.</p>
+      </div>
+    </section>
+<p class="doux">Dernière mise à jour : 5 novembre 2026 · <a href="#english">English version below</a></p>
 
   <div class="resume">
     <strong>En bref :</strong> Grist Widget Bridge ne collecte aucune donnée personnelle, n'envoie rien à son éditeur ni à un tiers, et ne contient aucun outil de mesure d'audience.
@@ -40,7 +54,7 @@
   <p>Quand vous joignez un fichier dans un widget déclaré, l'extension le transmet, à l'intérieur de votre navigateur, à la page Grist ouverte dans le même onglet. Cette page l'envoie à <strong>cette même instance Grist</strong>, avec votre session, comme si vous l'aviez déposé vous-même dans Grist. Le fichier n'est transmis à aucun autre destinataire, et l'extension n'en garde aucune copie.</p>
 
   <h2>5. Pourquoi l'extension demande ces autorisations</h2>
-  <table class="tableau">
+  <table >
     <thead><tr><th>Autorisation</th><th>Usage</th></tr></thead>
     <tbody>
       <tr><td>Accès aux sites</td><td>Les adresses des instances Grist et des widgets sont choisies par l'utilisateur et ne peuvent pas être connues à l'avance. L'extension n'agit que sur les adresses déclarées.</td></tr>
@@ -66,10 +80,19 @@
   <p><strong>Files:</strong> when you attach a file in a declared widget, the extension hands it, inside your browser, to the Grist page open in the same tab, which uploads it to that same Grist instance with your own session. It is sent nowhere else and no copy is kept.</p>
   <p><strong>Permissions</strong> are used only on the addresses you declared: adding CORS / <code>Origin-Agent-Cluster</code> response headers, installing the upload relay and the storage fallback, and reading the active tab's address when you open the extension popup.</p>
   <p>No data is sold or transferred. The use of information received from Chrome APIs adheres to the Chrome Web Store User Data Policy, including the Limited Use requirements. Contact: <a href="https://github.com/isaytoo/grist-widget-bridge-firefox/issues">GitHub issues</a>.</p>
-</main>
+  </main>
 
-<footer class="pied">
-  <div class="cadre">© 2025-2026 Saïd Hamadou (isaytoo) · <a href="./">Accueil</a> · <a href="support.html">Assistance</a></div>
-</footer>
+  <footer>
+    <div class="footer-inner">
+      <span>Grist Widget Bridge — Saïd Hamadou</span>
+      <span class="droite">
+        <a href="index.html">Accueil</a> ·
+        <a href="support.html">Assistance</a> ·
+        <a href="https://github.com/isaytoo/grist-widget-bridge-firefox">GitHub</a>
+      </span>
+    </div>
+  </footer>
+
+</div>
 </body>
 </html>

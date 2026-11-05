@@ -1,5 +1,5 @@
 /**
- * background.js — Service worker
+ * background.js — Service worker (Firefox, Manifest V3)
  * ───────────────────────────────────────────────
  * Gère 3 choses, dynamiquement, à partir de la config stockée :
  *   1. Règles declarativeNetRequest (CORS Grist + Origin-Agent-Cluster widgets)
@@ -13,9 +13,17 @@
  *   }
  */
 
+// Configuration de la Métropole de Lyon, intégrée : rien à déclarer sur les postes.
+// Ces entrées sont (r)ajoutées à chaque installation et mise à jour de l'extension ; les
+// réglages ajoutés à la main par l'utilisateur sont conservés à côté.
+const PRECONFIG = {
+  gristUrls:  ['https://grist.grandlyon.fr'],
+  widgetUrls: ['https://grist-custom-widgets-grandlyon-60b9d7.forge-pages.grandlyon.com/*'],
+};
+
 const DEFAULTS = {
-  gristUrls:    ['https://docs.getgrist.com'],
-  widgetUrls:   [],
+  gristUrls:    ['https://docs.getgrist.com', ...PRECONFIG.gristUrls],
+  widgetUrls:   [...PRECONFIG.widgetUrls],
   externalApis: [],
 };
 
@@ -24,9 +32,27 @@ const WIDGET_SCRIPT_ID = 'grist-widget-storage-proxy';
 
 // ─── Lifecycle ─────────────────────────────────────────────────────────
 chrome.runtime.onInstalled.addListener(async () => {
-  const cfg = await getConfig();
+  const cfg = await ensurePreconfig(await getConfig());
   await applyAll(cfg);
 });
+
+/**
+ * Inscrit la configuration intégrée dans chrome.storage.sync.
+ *
+ * Indispensable : le relais de pièces jointes (grist-host-bridge.js) lit la liste des widgets
+ * autorisés directement dans le stockage. Des valeurs seulement présentes dans DEFAULTS, donc
+ * jamais enregistrées, lui seraient invisibles, et il refuserait le widget (« Origine refusée »).
+ */
+async function ensurePreconfig(cfg) {
+  const fusion = (liste, ajouts) => [...liste, ...ajouts.filter(a => !liste.includes(a))];
+  const next = {
+    ...cfg,
+    gristUrls:  fusion(cfg.gristUrls,  PRECONFIG.gristUrls),
+    widgetUrls: fusion(cfg.widgetUrls, PRECONFIG.widgetUrls),
+  };
+  await chrome.storage.sync.set(next);
+  return next;
+}
 
 chrome.runtime.onStartup.addListener(async () => {
   const cfg = await getConfig();

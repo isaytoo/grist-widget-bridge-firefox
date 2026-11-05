@@ -1,66 +1,194 @@
+/* Grist Widget Bridge — habillage du site de présentation.
+   Repris des visuels du magasin : fond nuit bleutée, accent vert Grist, ambre pour les widgets. */
+
 :root {
-  --fond: #ffffff; --fond2: #f5f7f6; --bord: #dfe4e2; --texte: #1d2420; --doux: #5b6661;
-  --accent: #16a34a; --accent-fonce: #15803d; --r: 10px;
+  --nuit:      #0d1420;
+  --nuit-2:    #131c2b;
+  --carte:     #182233;
+  --ligne:     #233146;
+  --texte:     #e8edf5;
+  --gris:      #93a2b8;
+  --vert:      #10b981;
+  --vert-clair:#34d399;
+  --ambre:     #f59e0b;
+  --rayon:     14px;
+  --large:     1080px;
 }
-@media (prefers-color-scheme: dark) {
-  :root { --fond: #111614; --fond2: #18201c; --bord: #2a332e; --texte: #e7ece9; --doux: #9aa69f;
-          --accent: #34d399; --accent-fonce: #6ee7b7; }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--nuit);
+  color: var(--texte);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
 }
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--fond); color: var(--texte);
-  font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-a { color: var(--accent-fonce); }
-code { font-size: .9em; background: var(--fond2); border: 1px solid var(--bord); border-radius: 4px; padding: 0 4px; }
-.cadre { max-width: 920px; margin: 0 auto; padding: 0 20px; }
 
-.entete { border-bottom: 1px solid var(--bord); background: var(--fond2); }
-.entete .cadre { display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  flex-wrap: wrap; padding-top: 12px; padding-bottom: 12px; }
-.marque { display: flex; align-items: center; gap: 10px; font-weight: 650; font-size: 18px;
-  color: var(--texte); text-decoration: none; }
-.marque img { border-radius: 8px; }
-nav { display: flex; gap: 18px; flex-wrap: wrap; }
-nav a { color: var(--doux); text-decoration: none; font-size: 15px; }
-nav a:hover, nav a[aria-current="page"] { color: var(--texte); }
-nav a[aria-current="page"] { font-weight: 600; }
+/* Lueur d'arrière-plan, comme sur la capture d'architecture */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(760px 420px at 82% -8%, rgba(16, 185, 129, .13), transparent 70%),
+    radial-gradient(620px 380px at 6% 102%, rgba(99, 102, 241, .10), transparent 70%);
+  z-index: 0;
+}
 
-main { padding-top: 32px; padding-bottom: 48px; }
-h1 { font-size: 30px; line-height: 1.25; margin: 0 0 12px; letter-spacing: -.01em; }
-h2 { font-size: 21px; margin: 36px 0 10px; }
-h3 { font-size: 17px; margin: 0 0 6px; }
-.chapo { font-size: 18px; color: var(--doux); max-width: 64ch; }
-.texte { max-width: 760px; }
-.doux { color: var(--doux); font-size: 14px; }
+.enveloppe { position: relative; z-index: 1; }
 
-.grille { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-.carte { border: 1px solid var(--bord); border-radius: var(--r); padding: 18px; background: var(--fond);
-  border-top: 3px solid var(--accent); }
-.carte p { margin: 0; color: var(--doux); font-size: 15px; }
+a { color: var(--vert-clair); text-decoration: none; }
+a:hover { text-decoration: underline; }
 
-.etapes, .liste { padding-left: 22px; }
-.etapes li, .liste li { margin-bottom: 6px; }
-.note, .resume { background: var(--fond2); border: 1px solid var(--bord); border-left: 3px solid var(--accent);
-  border-radius: var(--r); padding: 12px 16px; font-size: 15px; }
-.resume { margin: 18px 0 8px; }
+code {
+  background: rgba(255, 255, 255, .07);
+  border: 1px solid var(--ligne);
+  padding: 1px 6px;
+  border-radius: 5px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .88em;
+}
 
-.bouton { display: inline-block; background: var(--accent-fonce); color: #fff; text-decoration: none;
-  padding: 9px 16px; border-radius: 8px; font-weight: 600; }
-@media (prefers-color-scheme: dark) { .bouton { color: #0b1210; } }
-.contact { background: var(--fond2); border: 1px solid var(--bord); border-radius: var(--r); padding: 4px 20px 16px; }
+/* ── Barre de navigation ─────────────────────────────────────────────── */
+.barre {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(13, 20, 32, .82);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--ligne);
+}
+.barre-inner {
+  max-width: var(--large); margin: 0 auto;
+  padding: 12px 20px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.marque { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--texte); }
+.marque:hover { text-decoration: none; }
+.marque img { width: 30px; height: 30px; border-radius: 8px; }
+.nav { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+.nav a {
+  color: var(--gris); padding: 7px 13px; border-radius: 8px; font-size: .93rem;
+}
+.nav a:hover { background: rgba(255, 255, 255, .06); color: var(--texte); text-decoration: none; }
+.nav a[aria-current="page"] { color: var(--texte); background: rgba(16, 185, 129, .14); }
 
-.tableau { width: 100%; border-collapse: collapse; font-size: 15px; margin: 8px 0; }
-.tableau th, .tableau td { text-align: left; vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--bord); }
-.tableau th { color: var(--doux); font-weight: 600; font-size: 14px; }
-.question { border: 1px solid var(--bord); border-radius: var(--r); padding: 10px 14px; margin-bottom: 8px; }
-.question summary { cursor: pointer; font-weight: 600; }
-.question p { margin: 8px 0 2px; color: var(--doux); }
-hr { border: 0; border-top: 1px solid var(--bord); margin: 40px 0 0; }
+/* ── Mise en page ────────────────────────────────────────────────────── */
+main { max-width: var(--large); margin: 0 auto; padding: 0 20px 80px; }
+section { padding-top: 56px; }
+h1 { font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.12; margin: 0 0 16px; letter-spacing: -.02em; }
+h2 { font-size: clamp(1.3rem, 3vw, 1.75rem); margin: 0 0 14px; letter-spacing: -.01em; }
+h3 { font-size: 1.05rem; margin: 0 0 8px; }
+p  { color: var(--gris); margin: 0 0 14px; }
+.accent { color: var(--vert-clair); }
+.chapeau { font-size: 1.12rem; max-width: 62ch; }
 
-.pied { border-top: 1px solid var(--bord); color: var(--doux); font-size: 14px; padding: 18px 0; }
-.pied a { color: var(--doux); }
+/* ── Accueil ─────────────────────────────────────────────────────────── */
+.hero { padding: 72px 0 8px; }
+.pastille {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(16, 185, 129, .12); border: 1px solid rgba(16, 185, 129, .3);
+  color: var(--vert-clair); padding: 5px 13px; border-radius: 999px;
+  font-size: .82rem; font-weight: 600; margin-bottom: 20px;
+}
+.actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+.bouton {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 22px; border-radius: 10px; font-weight: 600; font-size: .97rem;
+  border: 1px solid transparent; transition: transform .12s, background .15s, border-color .15s;
+}
+.bouton:hover { text-decoration: none; transform: translateY(-1px); }
+.bouton-plein { background: var(--vert); color: #04221a; }
+.bouton-plein:hover { background: var(--vert-clair); }
+.bouton-vide { border-color: var(--ligne); color: var(--texte); background: rgba(255, 255, 255, .03); }
+.bouton-vide:hover { border-color: var(--vert); }
 
-@media (max-width: 600px) {
-  h1 { font-size: 25px; }
-  .tableau { font-size: 14px; }
-  .tableau td, .tableau th { padding: 7px 6px; }
+/* ── Visuels ─────────────────────────────────────────────────────────── */
+figure { margin: 0; }
+.visuel {
+  margin-top: 36px;
+  border: 1px solid var(--ligne); border-radius: var(--rayon);
+  overflow: hidden; background: var(--nuit-2);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .45);
+}
+.visuel img { display: block; width: 100%; height: auto; }
+figcaption { color: var(--gris); font-size: .88rem; padding: 11px 16px; border-top: 1px solid var(--ligne); }
+
+/* ── Grilles de cartes ───────────────────────────────────────────────── */
+.grille { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(265px, 1fr)); }
+.carte {
+  background: var(--carte); border: 1px solid var(--ligne);
+  border-radius: var(--rayon); padding: 20px;
+}
+.carte p:last-child { margin-bottom: 0; }
+.jeton {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: grid; place-items: center; font-size: 1.1rem; margin-bottom: 12px;
+}
+.jeton-vert  { background: rgba(16, 185, 129, .15);  border: 1px solid rgba(16, 185, 129, .32); }
+.jeton-ambre { background: rgba(245, 158, 11, .14);  border: 1px solid rgba(245, 158, 11, .32); }
+.jeton-bleu  { background: rgba(99, 102, 241, .15);  border: 1px solid rgba(99, 102, 241, .32); }
+
+/* ── Étapes numérotées ───────────────────────────────────────────────── */
+.etapes { list-style: none; counter-reset: etape; padding: 0; margin: 0; display: grid; gap: 12px; }
+.etapes li {
+  counter-increment: etape;
+  background: var(--carte); border: 1px solid var(--ligne); border-radius: var(--rayon);
+  padding: 16px 18px 16px 58px; position: relative; color: var(--gris);
+}
+.etapes li::before {
+  content: counter(etape);
+  position: absolute; left: 16px; top: 15px;
+  width: 27px; height: 27px; border-radius: 8px;
+  background: rgba(16, 185, 129, .15); border: 1px solid rgba(16, 185, 129, .32);
+  color: var(--vert-clair); font-weight: 700; font-size: .85rem;
+  display: grid; place-items: center;
+}
+.etapes strong { color: var(--texte); }
+
+/* ── Encadrés ────────────────────────────────────────────────────────── */
+.encadre {
+  border-left: 3px solid var(--vert); border-radius: 0 10px 10px 0;
+  background: rgba(16, 185, 129, .07);
+  padding: 15px 18px; margin: 20px 0;
+}
+.encadre.ambre { border-left-color: var(--ambre); background: rgba(245, 158, 11, .07); }
+.encadre p:last-child { margin-bottom: 0; }
+.encadre strong { color: var(--texte); }
+
+/* ── Tableaux ────────────────────────────────────────────────────────── */
+table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: .94rem; }
+th, td { text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--ligne); vertical-align: top; }
+th { color: var(--texte); font-weight: 600; background: rgba(255, 255, 255, .03); }
+td { color: var(--gris); }
+
+ul:not(.etapes):not(.nav) { color: var(--gris); padding-left: 20px; }
+ul:not(.etapes):not(.nav) li { margin-bottom: 7px; }
+
+/* ── Pied de page ────────────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--ligne);
+  padding: 26px 20px 46px; color: var(--gris); font-size: .9rem;
+}
+.footer-inner { max-width: var(--large); margin: 0 auto; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.footer-inner .droite { margin-left: auto; }
+
+/* ── Téléphone ───────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .hero { padding-top: 42px; }
+  section { padding-top: 40px; }
+  main { padding-bottom: 56px; }
+  .nav { width: 100%; margin-left: 0; }
+  .bouton { width: 100%; justify-content: center; }
+}
+
+/* Lisible aussi pour qui force le thème clair du système : le site reste sombre,
+   mais on respecte la demande de mouvement réduit. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .bouton:hover { transform: none; }
 }

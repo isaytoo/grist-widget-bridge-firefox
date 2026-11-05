@@ -1,20 +1,20 @@
 {
   "manifest_version": 3,
-  "name": "Grist Widget Bridge",
-  "version": "2.4",
+  "name": "Grist Widget Bridge — Métropole de Lyon",
+  "version": "2.6",
   "description": "Débloque les widgets Grist (CORS, localStorage, upload) sur n'importe quelle instance et hébergeur.",
-
   "browser_specific_settings": {
     "gecko": {
       "id": "grist-widget-bridge@isaytoo",
       "strict_min_version": "140.0",
       "data_collection_permissions": {
-        "required": ["none"],
+        "required": [
+          "none"
+        ],
         "optional": []
       }
     }
   },
-
   "permissions": [
     "storage",
     "tabs",
@@ -22,13 +22,10 @@
     "scripting",
     "declarativeNetRequest"
   ],
-
   "host_permissions": [
     "<all_urls>"
   ],
-
   "options_page": "options.html",
-
   "action": {
     "default_popup": "popup.html",
     "default_title": "Grist Widget Bridge",
@@ -38,21 +35,24 @@
       "128": "icon128.png"
     }
   },
-
   "background": {
-    "scripts": ["background.js"]
+    "service_worker": "background.js"
   },
-
   "icons": {
-    "16":  "icon16.png",
-    "48":  "icon48.png",
+    "16": "icon16.png",
+    "48": "icon48.png",
     "128": "icon128.png"
   },
-
   "web_accessible_resources": [
     {
-      "resources": ["grist-host-bridge.js", "content-script.js"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "grist-host-bridge.js",
+        "content-script.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
-  ]
+  ],
+  "minimum_chrome_version": "116"
 }

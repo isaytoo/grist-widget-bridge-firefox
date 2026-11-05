@@ -55,24 +55,31 @@
   } catch (_) {}
 
   // ── Résolution du endpoint Grist ────────────────────────────────────
-  function resolveApiBase() {
-    try {
-      const cfg = window.gristConfig;
-      if (cfg?.homeUrl) {
-        const m = location.pathname.match(/\/doc\/([^/?#]+)/);
-        if (m) return `${cfg.homeUrl.replace(/\/$/, '')}/api/docs/${m[1]}`;
-      }
-    } catch (_) {}
-    const m = location.pathname.match(/^(\/o\/[^/]+)?\/doc\/([^/?#]+)/);
-    if (!m) throw new Error('[GristBridge] Impossible de déterminer le docId depuis l\'URL.');
-    return `${location.origin}${m[1] ?? ''}/api/docs/${m[2]}`;
+  // L'ancienne version n'acceptait que les adresses en /doc/<id> et échouait sur les instances
+  // à équipe dans le chemin, comme grist.grandlyon.fr/o/docs/uY4gHTxzC6SJ/… : « Impossible de
+  // déterminer le docId ». NB : window.gristConfig n'est pas lisible d'ici (content script en
+  // monde ISOLATED), d'où l'analyse de l'adresse.
+  //
+  // Ordre de préférence : l'identifiant transmis par le widget (le vrai docId, tiré de son jeton
+  // d'accès), puis celui de l'adresse de la page (/doc/<id>, /<id>/<titre>, /o/<équipe>/<id>/…).
+  // Grist contrôle de toute façon les droits de l'utilisateur sur le document visé.
+  const RE_DOC_ID = /^[A-Za-z0-9_-]{8,64}$/;
+  function resolveApiBase(docIdWidget) {
+    const prefixe = (location.pathname.match(/^(\/o\/[^/]+)/) || [])[1] || '';
+    let docId = RE_DOC_ID.test(docIdWidget || '') ? docIdWidget : '';
+    if (!docId) {
+      const m = location.pathname.match(/^(?:\/o\/[^/]+)?\/(?:doc\/)?([A-Za-z0-9_-]{8,64})(?:\/|$)/);
+      if (m) docId = m[1];
+    }
+    if (!docId) throw new Error('[GristBridge] Impossible de déterminer le docId depuis l\'URL.');
+    return `${location.origin}${prefixe}/api/docs/${docId}`;
   }
 
   function getAuthHeaders() {
     return { 'X-Requested-With': 'XMLHttpRequest' };
   }
 
-  async function doUpload({ base64, name, type }) {
+  async function doUpload({ base64, name, type, docId }) {
     const byteLength = Math.floor((base64.length * 3) / 4);
     if (byteLength > MAX_FILE_BYTES) {
       throw new Error(`Fichier trop volumineux (${(byteLength / 1024 / 1024).toFixed(1)} Mo > ${MAX_FILE_BYTES / 1024 / 1024} Mo)`);
@@ -85,7 +92,7 @@
     const formData = new FormData();
     formData.append('upload', blob, name);
 
-    const apiBase = resolveApiBase();
+    const apiBase = resolveApiBase(docId);
     const resp = await fetch(`${apiBase}/attachments`, {
       method: 'POST',
       headers: getAuthHeaders(),

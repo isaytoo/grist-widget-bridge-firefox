@@ -1,33 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Assistance — Grist Widget Bridge</title>
-<meta name="description" content="Aide et contact pour l'extension Grist Widget Bridge.">
+<meta name="description" content="Aide, diagnostic et signalement de problème pour l'extension Grist Widget Bridge.">
+<link rel="icon" href="img/icon128.png">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="entete">
-  <div class="cadre">
-    <a class="marque" href="./"><img src="icon128.png" alt="" width="40" height="40"> Grist Widget Bridge</a>
-    <nav><a href="./">Accueil</a><a href="support.html" aria-current="page">Assistance</a><a href="confidentialite.html">Confidentialité</a></nav>
-  </div>
-</header>
+<div class="enveloppe">
 
-<main class="cadre">
-  <h1>Assistance</h1>
+  <nav class="barre">
+    <div class="barre-inner">
+      <a class="marque" href="index.html"><img src="img/icon128.png" alt=""> Grist Widget Bridge</a>
+      <div class="nav">
+        <a href="index.html">Accueil</a>
+        <a href="support.html" aria-current="page">Assistance</a>
+        <a href="confidentialite.html">Confidentialité</a>
+        <a href="https://github.com/isaytoo/grist-widget-bridge-firefox">Code source</a>
+      </div>
+    </div>
+  </nav>
 
-  <section class="contact">
+  <main>
+    <section class="hero" style="padding-bottom:0">
+      <span class="pastille">● Aide et diagnostic</span>
+      <h1>Assistance</h1>
+      <p class="chapeau">Comment vérifier que l'extension fonctionne, et quoi faire quand elle semble inactive.</p>
+    </section>
+
+
+  <section>
     <h2>Signaler un problème ou poser une question</h2>
     <p>Ouvrez un ticket sur le dépôt GitHub de l'extension. Décrivez ce que vous faisiez, ce que vous attendiez, et joignez si possible les lignes de la console qui commencent par <code>[GristBridge]</code>.</p>
-    <p><a class="bouton" href="https://github.com/isaytoo/grist-widget-bridge-firefox/issues">Ouvrir un ticket sur GitHub</a></p>
+    <p><a class="bouton bouton-plein" href="https://github.com/isaytoo/grist-widget-bridge-firefox/issues">Ouvrir un ticket sur GitHub</a></p>
   </section>
 
   <section>
     <h2>Vérifier que l'extension fonctionne</h2>
     <p>Ouvrez les outils de développement (F12), onglet <strong>Console</strong>, sur la page Grist qui contient le widget.</p>
-    <table class="tableau">
+    <table >
       <thead><tr><th>Message</th><th>Signification</th></tr></thead>
       <tbody>
         <tr><td><code>[GristBridge] Bridge installé</code></td><td>Le relais est présent dans la page Grist.</td></tr>
@@ -39,20 +52,20 @@
 
   <section>
     <h2>Problèmes fréquents</h2>
-    <details class="question">
-      <summary>Le message « Bridge installé » apparaît deux fois</summary>
+    <details class="carte" style="margin-bottom:12px">
+      <summary style="cursor:pointer;color:var(--texte);font-weight:600">Le message « Bridge installé » apparaît deux fois</summary>
       <p>Deux versions de l'extension sont actives en même temps. Elles répondraient toutes deux au widget, et la plus ancienne peut faire échouer l'envoi. Dans <code>chrome://extensions</code>, n'en gardez qu'une.</p>
     </details>
-    <details class="question">
-      <summary>Rien ne change après une mise à jour du widget</summary>
+    <details class="carte" style="margin-bottom:12px">
+      <summary style="cursor:pointer;color:var(--texte);font-weight:600">Rien ne change après une mise à jour du widget</summary>
       <p>Le navigateur sert encore l'ancienne version, gardée en cache. Modifiez le paramètre <code>_cb=</code> dans l'adresse du widget (panneau de droite de Grist, « URL personnalisée »), ou cochez « Désactiver le cache » dans l'onglet Réseau des outils de développement, puis rechargez.</p>
     </details>
-    <details class="question">
-      <summary>L'envoi de fichier échoue sans aucune ligne « Handshake »</summary>
+    <details class="carte" style="margin-bottom:12px">
+      <summary style="cursor:pointer;color:var(--texte);font-weight:600">L'envoi de fichier échoue sans aucune ligne « Handshake »</summary>
       <p>Le widget n'a pas interrogé l'extension : soit il ne sait pas le faire (version trop ancienne), soit l'instance Grist n'est pas déclarée et le relais n'a pas été injecté. Vérifiez la présence de « Bridge installé » au chargement de la page.</p>
     </details>
-    <details class="question">
-      <summary>Grist répond « droits insuffisants »</summary>
+    <details class="carte" style="margin-bottom:12px">
+      <summary style="cursor:pointer;color:var(--texte);font-weight:600">Grist répond « droits insuffisants »</summary>
       <p>L'extension ne contourne pas les droits de Grist. Votre compte doit pouvoir écrire dans le document qui reçoit le fichier.</p>
     </details>
   </section>
@@ -61,10 +74,19 @@
     <h2>Pour les développeurs de widgets</h2>
     <p>Le protocole du relais (découverte, puis envoi d'un fichier par message) est décrit dans le <a href="https://github.com/isaytoo/grist-widget-bridge-firefox#readme">README du dépôt</a>.</p>
   </section>
-</main>
+  </main>
 
-<footer class="pied">
-  <div class="cadre">© 2025-2026 Saïd Hamadou (isaytoo) · <a href="./">Accueil</a> · <a href="confidentialite.html">Confidentialité</a></div>
-</footer>
+  <footer>
+    <div class="footer-inner">
+      <span>Grist Widget Bridge — Saïd Hamadou</span>
+      <span class="droite">
+        <a href="index.html">Accueil</a> ·
+        <a href="confidentialite.html">Confidentialité</a> ·
+        <a href="https://github.com/isaytoo/grist-widget-bridge-firefox">GitHub</a>
+      </span>
+    </div>
+  </footer>
+
+</div>
 </body>
 </html>

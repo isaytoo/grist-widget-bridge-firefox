@@ -1,105 +1,67 @@
-# Grist Widget Bridge — Firefox Extension
+# Grist Widget Bridge — extension Chrome
 
-> **English version below** · [Jump to English](#english)
-
----
-
-## Français
-
-### Présentation
-
-**Grist Widget Bridge** est une extension Firefox qui résout les trois blocages courants lors du développement de widgets personnalisés pour [Grist](https://getgrist.com) :
+Débloque les widgets Grist personnalisés hébergés sur un autre site que l'instance Grist.
 
 | Problème | Solution |
 |----------|----------|
-| CORS bloqué sur l'API Grist | Injection des headers `Access-Control-Allow-Origin` via `declarativeNetRequest` |
-| `localStorage` inaccessible dans les iframes cross-origin | Proxy transparent basé sur `browser.storage.local` |
-| Upload de fichiers impossible depuis un widget externe | Pont `postMessage` relayé par la page Grist parente |
+| CORS bloqué sur l'API Grist | En-têtes `Access-Control-Allow-Origin` ajoutés par `declarativeNetRequest` |
+| `localStorage` inaccessible dans l'iframe du widget | Proxy transparent sur `chrome.storage.local` |
+| Envoi de pièces jointes bloqué (portail d'authentification, CORS) | Relais `postMessage` : la page Grist, qui porte le cookie de session, envoie le fichier |
 
-### Installation
+## Installation (mode développeur)
 
-#### Depuis Firefox Add-ons (AMO) — recommandé
-🔗 [addons.mozilla.org/fr/firefox/addon/grist-widget-bridge](https://addons.mozilla.org/fr/firefox/addon/grist-widget-bridge)
+1. Ouvrir `about:debugging`
+2. Activer **Mode développeur** (en haut à droite)
+3. **Charger l'extension non empaquetée** → choisir ce dossier
+4. Épingler l'icône dans la barre d'outils
 
-#### Chargement temporaire (développement)
-1. Ouvrir `about:debugging` dans Firefox
-2. Cliquer sur **"Ce Firefox"**
-3. Cliquer sur **"Charger un module complémentaire temporaire…"**
-4. Sélectionner le fichier `manifest.json` de ce dossier
+Déploiement sur un parc : publier l'extension (modules complémentaires de Firefox, éventuellement en
+« non répertoriée ») puis la forcer par stratégie `ExtensionInstallForcelist`.
 
-### Utilisation
+## Utilisation
 
-1. Cliquer sur l'icône 🔌 dans la barre d'outils Firefox
-2. Sur la page de votre instance Grist → **"+ Comme instance Grist"**
-3. Sur la page de votre widget → **"+ Comme widget"**
-4. Recharger les onglets concernés
+1. Sur une page de votre instance Grist → **« + Comme instance Grist »**
+2. Sur la page de votre widget → **« + Comme widget »** (ou saisir son origine dans
+   « Ajouter un widget »)
+3. Recharger les onglets concernés
 
-### Configuration avancée
+Le relais de pièces jointes n'accepte que les widgets déclarés, et seulement depuis une
+iframe de la page Grist.
 
-Cliquer sur **⚙ Options** dans le popup pour gérer manuellement les URLs, ajouter des APIs externes (Cloudinary, S3, Supabase…), ou réinitialiser la configuration.
+## Configuration intégrée (2.6)
 
-### Compatibilité
+Cette version est préconfigurée pour la Métropole de Lyon : à l'installation, et à chaque mise
+à jour, elle déclare d'elle-même
 
-- Firefox **140+** (requis pour `data_collection_permissions`)
-- Firefox pour Android : non testé
+- l'instance Grist `https://grist.grandlyon.fr`
+- l'hébergeur des widgets `https://grist-custom-widgets-grandlyon-60b9d7.forge-pages.grandlyon.com/*`
 
-### Confidentialité
+Rien à configurer sur les postes. Les entrées ajoutées à la main restent possibles et sont
+conservées. Pour une autre instance ou un autre hébergeur, modifier `PRECONFIG` en tête de
+`background.js`.
 
-Aucune donnée utilisateur n'est collectée ni transmise à des tiers. L'extension n'agit que sur les URLs explicitement configurées par l'utilisateur.
+## Nouveautés 2.5
 
-### Licence
+- Relais de pièces jointes : le document est trouvé quel que soit le format de l'adresse
+  (`/doc/<id>`, `/<id>/<titre>`, `/o/<équipe>/<id>/…`), et l'identifiant transmis par le
+  widget est utilisé en priorité. La 2.4 échouait sur `grist.grandlyon.fr/o/docs/…`.
+- Version Chrome (service worker Manifest V3).
 
-[MIT](LICENSE) · © 2025 Saïd Hamadou ([@isaytoo](https://github.com/isaytoo))
+## Protocole du relais (pour les widgets)
 
----
+```js
+// 1. Découverte
+parent.postMessage({ _gristBridge: true, type: 'HANDSHAKE', version: '1' }, '*');
+// ← { _gristBridge: true, type: 'HANDSHAKE_ACK', version: '1' }   (e.origin = page Grist)
 
-## English <a name="english"></a>
+// 2. Envoi, un fichier par message
+parent.postMessage({ _gristBridge: true, type: 'UPLOAD', version: '1', requestId,
+  payload: { base64, name, type, docId } }, origineGrist);
+// ← { _gristBridge: true, requestId, result: [idPièceJointe] }  ou  { …, error }
+```
 
-### Overview
+Les identifiants s'écrivent dans une colonne Pièces jointes sous la forme `['L', ...ids]`.
 
-**Grist Widget Bridge** is a Firefox extension that solves three common issues when developing custom widgets for [Grist](https://getgrist.com):
+## Licence
 
-| Problem | Solution |
-|---------|----------|
-| CORS blocked on Grist API | Injects `Access-Control-Allow-Origin` headers via `declarativeNetRequest` |
-| `localStorage` unavailable in cross-origin iframes | Transparent proxy backed by `browser.storage.local` |
-| File upload impossible from an external widget | `postMessage` bridge relayed by the parent Grist page |
-
-### Installation
-
-#### From Firefox Add-ons (AMO) — recommended
-🔗 [addons.mozilla.org/en-US/firefox/addon/grist-widget-bridge](https://addons.mozilla.org/en-US/firefox/addon/grist-widget-bridge)
-
-#### Temporary load (development)
-1. Open `about:debugging` in Firefox
-2. Click **"This Firefox"**
-3. Click **"Load Temporary Add-on…"**
-4. Select the `manifest.json` file from this folder
-
-### Usage
-
-1. Click the 🔌 icon in the Firefox toolbar
-2. On your Grist instance page → **"+ As Grist instance"**
-3. On your widget page → **"+ As widget"**
-4. Reload the relevant tabs
-
-### Advanced configuration
-
-Click **⚙ Options** in the popup to manually manage URLs, add external APIs (Cloudinary, S3, Supabase…), or reset the configuration.
-
-### Compatibility
-
-- Firefox **140+** (required for `data_collection_permissions`)
-- Firefox for Android: untested
-
-### Privacy
-
-No user data is collected or transmitted to third parties. The extension only acts on URLs explicitly configured by the user.
-
-### Chrome version
-
-Looking for the Chrome version? → [github.com/isaytoo/grist-widget-bridge](https://github.com/isaytoo/grist-widget-bridge)
-
-### License
-
-[MIT](LICENSE) · © 2025 Saïd Hamadou ([@isaytoo](https://github.com/isaytoo))
+MIT · © 2025-2026 Saïd Hamadou ([@isaytoo](https://github.com/isaytoo))
