@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Grist Widget Bridge — Métropole de Lyon",
+  "name": "Grist Widget Bridge",
   "version": "2.6",
   "description": "Débloque les widgets Grist (CORS, localStorage, upload) sur n'importe quelle instance et hébergeur.",
   "browser_specific_settings": {

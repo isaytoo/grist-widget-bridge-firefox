@@ -13,7 +13,7 @@
  *   }
  */
 
-// Configuration de la Métropole de Lyon, intégrée : rien à déclarer sur les postes.
+// Configuration intégrée : rien à déclarer sur les postes.
 // Ces entrées sont (r)ajoutées à chaque installation et mise à jour de l'extension ; les
 // réglages ajoutés à la main par l'utilisateur sont conservés à côté.
 const PRECONFIG = {

@@ -30,7 +30,7 @@ iframe de la page Grist.
 
 ## Configuration intégrée (2.6)
 
-Cette version est préconfigurée pour la Métropole de Lyon : à l'installation, et à chaque mise
+Cette version est préconfigurée pour l'organisation : à l'installation, et à chaque mise
 à jour, elle déclare d'elle-même
 
 - l'instance Grist `https://grist.grandlyon.fr`
@@ -64,4 +64,4 @@ Les identifiants s'écrivent dans une colonne Pièces jointes sous la forme `['L
 
 ## Licence
 
-MIT · © 2025-2026 Saïd Hamadou ([@isaytoo](https://github.com/isaytoo))
+MIT · © 2025-2026 isaytoo ([@isaytoo](https://github.com/isaytoo))
